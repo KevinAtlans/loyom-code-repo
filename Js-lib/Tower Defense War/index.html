@@ -1,0 +1,21 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>DEMO</title>
+        <script type="text/javascript" src="Resources/script/wizard.js"></script>
+    </head>
+    <body>
+        <canvas id="scene1" width="800" height="100"></canvas><br/>
+        <canvas id="scene2" width="800" height="300"></canvas>
+        <script type="text/javascript">
+            var ctx1 = document.getElementById("scene1").getContext("2d");
+            var xk = new wizard(ctx1,'xk');
+            xk.walkRight(0,4);
+
+            var ctx2 = document.getElementById("scene2").getContext("2d");
+            var xk = new wizard(ctx2,'xk');
+            xk.weaponSwingRight(12,12);
+        </script>
+    </body>
+</html>

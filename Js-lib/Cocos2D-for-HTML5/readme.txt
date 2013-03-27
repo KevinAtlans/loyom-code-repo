@@ -1,0 +1,1 @@
+cocos2d api : http://www.html5so.com/cocos2d-html5/

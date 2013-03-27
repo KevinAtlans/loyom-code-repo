@@ -1,0 +1,116 @@
+<html>
+<script>
+	var count = 1;//Tab counter
+	var crawlerTotal = 0;
+	var createTabTotal = 0;
+	var interval = 0;
+	var total = 0;
+	var getRestMessageUrl = null;
+	var sendRestMessageUrl = null;
+
+	function getNewUrl() {
+		console.log("getting a url form " + getRestMessageUrl);
+		var request = new XMLHttpRequest();
+		request.open('GET', getRestMessageUrl, false);
+		request.send(null);
+		var responseFromServer = request.responseText;
+		if (responseFromServer === "")
+			return null;
+
+		console.log("responseFromServer:" + responseFromServer)
+		var jsonResponse = JSON.parse(responseFromServer);
+		return jsonResponse;
+	}
+
+	function sendResponseForURLWithUrls(restMessage) {
+
+		console.log("posting url info");
+		var request = new XMLHttpRequest();
+		request.open('POST', sendRestMessageUrl, false);
+		request.setRequestHeader("Content-type", "application/json");
+
+		var jsonObject = JSON.stringify(restMessage, null, 2);
+		request.send(jsonObject);
+	}
+
+	function createTabAndExecuteCustomScript(restMessage) {
+		var createProperties = {
+			"url" : restMessage.url
+		};
+		var scriptObject = {
+			"code" : restMessage.javaScriptObject
+		};
+		createTabTotal = createTabTotal + 1;
+		chrome.tabs.create(createProperties, function tabCreated(tab) {
+			chrome.tabs.executeScript(tab.id, scriptObject);
+			chrome.extension.onRequest.addListener(function(request, sender) {
+				restMessage.pageNumber = request.pages
+				restMessage.payload = request.response
+				restMessage.isLastMessage = request.isLast
+
+				var senderTab = sender.tab;
+				if (senderTab != null && tab.id == senderTab.id) {
+					var links = request.links
+					if (links != null && request.response != null) {
+						crawlerTotal = crawlerTotal + 1;
+						console.log(crawlerTotal
+								+ " times to get the data ready to send!")
+						sendResponseForURLWithUrls(restMessage);
+					}
+					var stateHarvestDone = request.isLast
+					if (stateHarvestDone) {
+						chrome.tabs.remove(tab.id, startStateCapture());
+						count = count - 1;
+					}
+				}
+			});
+		});
+	}
+	function startStateCapture() {
+		if (count > parseInt(total)) {
+			console.log("Tab exceeds the limit  Pause for " + interval
+					+ " Millisecond and try again! now times :" + count)
+		} else {
+			var restMessage = getNewUrl(this)
+			if (restMessage == null || restMessage.url == null) {
+				console.log("restMessage is null, Pause for " + interval
+						+ " Millisecond and try again!")
+			} else {
+				createTabAndExecuteCustomScript(restMessage);
+				count = count + 1;
+			}
+		}
+		setTimeout('init()', parseInt(interval));
+	}
+
+	function init() {
+
+		getRestMessageUrl = localStorage["getRestMessageUrl"];
+		if (!getRestMessageUrl) {
+			alert('Get restMessage url is null,Please enter in the options which then reload!');
+			return;
+		}
+		sendRestMessageUrl = localStorage["sendRestMessageUrl"];
+		if (!sendRestMessageUrl) {
+			alert('Send restMessage url is null,Please enter in the options which then reload!');
+			return;
+		}
+		interval = localStorage["Time_interval"];
+		total = localStorage["Tab_number"];
+		if (!interval) {
+			localStorage["Time_interval"] = 5000;
+			interval = localStorage["Time_interval"];
+		}
+		if (!total) {
+			localStorage["Tab_number"] = 5;
+			total = localStorage["Tab_number"];
+		}
+		console.log("interval:" + interval);
+		console.log("number:" + total);
+		console.log("Get RestMessage Url:" + getRestMessageUrl);
+		console.log("Send RestMessage Url:" + sendRestMessageUrl);
+		startStateCapture();
+	}
+	init();
+</script>
+</html>

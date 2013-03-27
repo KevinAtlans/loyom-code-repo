@@ -1,0 +1,184 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>DEMO</title>
+	</head>
+	<body>
+		<canvas id="scene" width="800" height="600"></canvas>
+		<script type="text/javascript">
+			var ctx = document.getElementById("scene").getContext("2d");
+			var ctxW = document.getElementById("scene").width;//画布宽
+			var ctxH = document.getElementById("scene").height;//画面高
+			var currentPoint = {"X":0,"Y":0};//精灵当前位置
+			var mousePoint = {"X":0,"Y":0};//鼠标相对位置
+			var direction=0;//当前朝向
+			var Directions={
+			        North:6,
+			        NorthEast:7,
+			        East:0,
+			        SouthEast:1,
+			        South:2,
+			        SouthWest:3,
+			        West:4,
+			        NorthWest:5
+			    };
+			    
+			var timer;//定时器
+			//获取鼠标相对坐标
+			document.getElementById("scene").onmousemove=function(e){
+			    e = e || window.event;
+			    if(e.pageX || e.pageY){
+			        mousePoint.X=parseInt(e.pageX);
+			        mousePoint.Y = parseInt(e.pageY);
+			    }else{
+			        mousePoint.X=parseInt(e.clientX + document.body.scrollLeft - document.body.clientLeft);
+			        mousePoint.Y=parseInt(e.clientY + document.body.scrollTop  - document.body.clientTop);
+			    }
+			    var boundingClient=document.getElementById("scene").getBoundingClientRect();
+			    mousePoint.X-=parseInt(boundingClient.left+document.documentElement.scrollLeft);
+			    mousePoint.Y-=parseInt(boundingClient.top+document.documentElement.scrollTop);
+			};
+			//获取两个坐标点的距离
+			function GetDistance(x,y){
+			    return Math.sqrt(Math.pow((x.X - y.X), 2) + Math.pow((x.Y - y.Y), 2));
+			};
+			//获取精灵朝向
+			function GetDirection(current,target){
+			    var n = (target.Y - current.Y) / (target.X - current.X);
+			    if (Math.abs(n) >= Math.tan(Math.PI * 3 / 8) && target.Y <= current.Y) {
+			        return Directions.North;
+			    } else if (Math.abs(n) > Math.tan(Math.PI / 8) && Math.abs(n) < Math.tan(Math.PI * 3 / 8) && target.X > current.X && target.Y < current.Y) {
+			        return Directions.NorthEast;
+			    } else if (Math.abs(n) <= Math.tan(Math.PI / 8) && target.X >= current.X) {
+			        return Directions.East;
+			    } else if (Math.abs(n) > Math.tan(Math.PI / 8) && Math.abs(n) < Math.tan(Math.PI * 3 / 8) && target.X > current.X && target.Y > current.Y) {
+			        return Directions.SouthEast;
+			    } else if (Math.abs(n) >= Math.tan(Math.PI * 3 / 8) && target.Y >= current.Y) {
+			        return Directions.South;
+			    } else if (Math.abs(n) > Math.tan(Math.PI / 8) && Math.abs(n) < Math.tan(Math.PI * 3 / 8) && target.X < current.X && target.Y > current.Y) {
+			        return Directions.SouthWest;
+			    } else if (Math.abs(n) <= Math.tan(Math.PI / 8) && target.X <= current.X) {
+			        return Directions.West;
+			    } else if (Math.abs(n) > Math.tan(Math.PI / 8) && Math.abs(n) < Math.tan(Math.PI * 3 / 8) && target.X < current.X && target.Y < current.Y) {
+			        return Directions.NorthWest;
+			    } else {
+			        return 0;
+			    }
+			};
+			//判断精灵是否到达指定坐标
+			function RatherPoint(p1,p2){
+			    switch(direction){
+			        case Directions.North:
+			            return p1.Y<=p2.Y;
+			        case Directions.NorthEast:
+			            return p1.X>=p2.X||p1.Y<=p2.Y;
+			        case Directions.East:
+			            return p1.X>=p2.X;
+			        case Directions.SouthEast:
+			            return p1.X>=p2.X||p1.Y>=p2.Y;
+			        case Directions.South:
+			            return p1.Y>=p2.Y;
+			        case Directions.SouthWest:
+			            return p1.X<=p2.X||p1.Y>=p2.Y;
+			        case Directions.West:
+			            return p1.X<=p2.X;
+			        case Directions.NorthWest:
+			            return p1.X<=p2.X || p1.Y<=p2.Y;
+			    };
+			    return true;
+			};
+			//获取每次移动步长
+			function GetMovePoint(toPoint){
+			    var m=0,n=0,t=1;
+			    var speed=10;//移动速度
+			    switch(direction){
+			        case Directions.North:
+			            m=0;
+			            n=-speed;
+			            break;
+			        case Directions.NorthEast:
+			            t = GetDistance(currentPoint,toPoint);
+			            m=speed * (toPoint.X-currentPoint.X)/t;
+			            n=-speed * (currentPoint.Y - toPoint.Y)/t;
+			            break;
+			        case Directions.East:
+			            m=speed;
+			            n=0;
+			            break;
+			        case Directions.SouthEast://alert("Directions.SouthEast"+toPoint.X);
+			            t = GetDistance(currentPoint,toPoint);//alert(t);
+			            m=speed * (toPoint.X-currentPoint.X)/t;
+			            n=speed * (toPoint.Y-currentPoint.Y)/t;
+			            break;
+			        case Directions.South:
+			            m=0;
+			            n=speed;
+			            break;
+			        case Directions.SouthWest:
+			            t = GetDistance(currentPoint,toPoint);
+			            m=-speed * (currentPoint.X-toPoint.X)/t;
+			            n=speed * (toPoint.Y-currentPoint.Y)/t;
+			            break;
+			        case Directions.West:
+			            m=-speed;
+			            n=0;
+			            break;
+			        case Directions.NorthWest:
+			            t = GetDistance(currentPoint,toPoint);
+			            m=-speed * (currentPoint.X-toPoint.X)/t;
+			            n=-speed * (currentPoint.Y-toPoint.Y)/t;
+			            break;
+			    };
+			    return {"X":m,"Y":n};
+			}
+			//鼠标点击事件 
+			document.getElementById("scene").onclick=function(){
+			    clearInterval(timer);//清除定时器
+			    var tp = {"X":mousePoint.X,"Y":mousePoint.Y};//鼠标点击坐标，引用值不能直接用mousePoint，不然当鼠标在点击后移动时，目的坐标会变更
+			    direction = GetDirection(currentPoint,tp);//设置精灵朝向
+			    var movePoint = GetMovePoint(tp);//获取移动步长
+			    timer=setInterval(function(){//判断是否到达目标
+			        if(!RatherPoint(currentPoint,tp)){
+			            currentPoint.X+=movePoint.X;
+			            currentPoint.Y+=movePoint.Y;
+			            //碰撞检测
+			            if(currentPoint.X>ctxW){
+			                currentPoint=ctxW;
+			                clearInterval(timer);
+			            }
+			            if(currentPoint.X<0){
+			                currentPoint=0;
+			                clearInterval(timer);
+			            }
+			            if(currentPoint.Y>ctxH){
+			                currentPoint=ctxH;
+			                clearInterval(timer);
+			            }
+			            if(currentPoint.Y<0){
+			                currentPoint=0;
+			                clearInterval(timer);
+			            }
+			        }else{
+			            clearInterval(timer);
+			        }
+			    },100);
+			}
+
+			var index=0;
+			var img = new Image();
+			img.onload=function(){
+			    setInterval(function(){
+			        if(index>=9){
+			            index=0;
+			        }else{
+			            index++;
+			        }
+			        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			        ctx.drawImage(img,index * 75,direction * 70 ,75,70,currentPoint.X,currentPoint.Y,75,70);
+			    },50);
+			}
+			img.src="honglong.gif";
+		</script>
+	</body>
+</html>

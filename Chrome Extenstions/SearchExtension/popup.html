@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<title>Search</title>
+<style>
+body {
+	overflow: hidden;
+	margin: 0px;
+	padding: 0px;
+	background: white;
+}
+
+#div_con {
+	width: 180px;
+}
+
+#type {
+	width: 70px;
+}
+
+#words {
+	width: 95px;
+}
+
+#input_search {
+	width: 70px;
+}
+</style>
+<script src="search.js"></script>
+</head>
+<body>
+	<div id="div_con">
+		Search Engine : <select name="type" id="type">
+			<option value="1">Google</option>
+			<option value="2">Baidu</option>
+			<option value="3">Soso</option>
+			<option value="4">Sogou</option>
+		</select>
+	</div>
+	<div id="div_con">
+		<input type="text" name="words" id="words"
+			onkeypress="if(event.keyCode==13) {input_search.click();return false;}" />
+		<input type="button" value="Search" name="input_search"
+			id="input_search" onclick="search_click();" />
+	</div>
+</body>
+</html>

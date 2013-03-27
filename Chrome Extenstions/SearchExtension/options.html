@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Custom News Crawler Options</title>
+<meta charset=utf-8 />
+<style type="text/css">
+body {
+	background: #fff;
+	font-size: 13.4px;
+	font-family: Verdana, sans-serif;
+	color: #333333;
+	margin: 0;
+}
+
+a {
+	text-decoration: none;
+	color: #333333;
+	border-bottom: 1px dotted #ccc;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #0CF;
+	border-bottom: 1px solid #0CF;
+}
+
+hr {
+	margin: 0;
+}
+
+h2 {
+	font-size: 16px;
+	color: #00CCFF;
+	margin: 20px 0 15px 0;
+}
+
+#page { /*border: 3px solid #28AEA8;*/
+	margin: 0 auto 10px;
+	width: 800px;
+	text-align: left;
+	padding: 30px;
+	-webkit-border-radius: 20px;
+	-webkit-box-shadow: #ddd -2px 2px 10px;
+}
+
+#title {
+	margin: 30px auto;
+	font-size: 35px;
+	width: 700px;
+	padding-left: 10px;
+	text-align: left;
+	font-weight: bold;
+	text-shadow: transparent 0 0 1px; /*anit-alias*/
+}
+
+input[type=text] {
+	color: #010101;
+	background-color: transparent;
+	padding: 3px;
+	outline: none;
+	text-align: center;
+	border: 1px solid #bbb;
+	width: 50px;
+	margin-right: 10px;
+	-webkit-border-radius: 4px;
+	-webkit-box-shadow: #CCC 0px 0px 2px;
+}
+
+#save {
+	font-size: 16px;
+	cursor: pointer;
+	width: 160px;
+	margin: 0 auto;
+	display: block;
+}
+
+button {
+	font-weight: bold;
+	border: 1px solid #ccc;
+	background: #f6f6f6;
+	color: #777;
+	text-shadow: 1px 1px 0 white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(white),
+		to(#EFEFEF) );
+	-webkit-transition: all 0.15s ease-out;
+}
+
+button:hover {
+	color: #555;
+	box-shadow: 0 0 3px #999;
+}
+
+button:active {
+	background: #DDD;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#CCC),
+		to(white) );
+}
+
+/*.default_value { display:none; }*/
+.note {
+	font-size: 80%;
+	color: #666;
+	padding-left: 10px;
+	cursor: help;
+}
+
+label[title],.help {
+	cursor: help;
+}
+
+.setting-name {
+	width: 150px;
+}
+</style>
+<script type="text/javascript">
+	function save_options() {
+		var interval = document.getElementById("Time_interval").value;
+		var number = document.getElementById("Tab_number").value;
+		var getRestMessageUrl = document.getElementById("getRestMessageUrl").value;
+		var sendRestMessageUrl = document.getElementById("sendRestMessageUrl").value;
+		localStorage["Time_interval"] = interval;
+		localStorage["Tab_number"] = number;
+		localStorage["getRestMessageUrl"] = getRestMessageUrl;
+		localStorage["sendRestMessageUrl"] = sendRestMessageUrl;
+
+		alert('Save Settings Successful!');
+	}
+
+	function restore_options() {
+		var interval = localStorage["Time_interval"];
+		var number = localStorage["Tab_number"];
+		var getRestMessageUrl = localStorage["getRestMessageUrl"];
+		var sendRestMessageUrl = localStorage["sendRestMessageUrl"];
+
+		if (!interval) {
+			localStorage["Time_interval"] = 5000;
+			interval = localStorage["Time_interval"];
+		}
+		if (!number) {
+			localStorage["Tab_number"] = 5;
+			number = localStorage["Tab_number"];
+		}
+		console.log("interval:" + interval);
+		console.log("number:" + number);
+		document.getElementById("Time_interval").value = interval;
+		document.getElementById("Tab_number").value = number;
+		if (getRestMessageUrl)
+			document.getElementById("getRestMessageUrl").value = getRestMessageUrl;
+		if (sendRestMessageUrl)
+			document.getElementById("sendRestMessageUrl").value = sendRestMessageUrl;
+	}
+</script>
+</head>
+<body onload="restore_options()">
+	<div id="title">Custom News Crawler Options</div>
+	<div id="page">
+		<h2 style="margin-top: 0;">Run Settings</h2>
+		<table border="0" cellpadding="0" cellspacing="2"
+			style="font-size: 12px; margin-left: 40px">
+			<tr>
+				<td class="setting-name"><label for="Time_interval"
+					title="Interval means that the new tab">Time interval [ms]</label></td>
+				<td><input id="Time_interval" type="text" size="2"
+					maxlength="5"></td>
+				<td class="default_value"><span
+					style="color: #00CCFF; font-size: 12px;"> <i>Default
+							value: 5000</i></span></td>
+				<td class="note" title="Interval means that the new tab">(<b>how</b>
+					quick)
+				</td>
+			</tr>
+			<tr>
+				<td class="setting-name"><label for="Tab_number"
+					title="Means the tab, the number of simultaneous">Tab
+						number</label></td>
+				<td><input id="Tab_number" type="text" size="2" maxlength="2">
+				</td>
+				<td class="default_value"><span
+					style="color: #00CCFF; font-size: 12px;"> <i>Default
+							value: 5</i></span></td>
+				<td class="note" title="Means the tab, the number of simultaneous">(<b>how</b>
+					much)
+				</td>
+			</tr>
+			<tr>
+				<td class="setting-name"><label for="getRestMessageUrl"
+					title="Means the tab, the number of simultaneous">Get
+						restMessage url</label></td>
+				<td colspan="3"><input id="getRestMessageUrl" type="text"
+					style="width: 400px; text-align: left;" /></td>
+			</tr>
+			<tr>
+				<td class="setting-name"><label for="sendRestMessageUrl"
+					title="Means the tab, the number of simultaneous">Send
+						restMessage url</label></td>
+				<td colspan="3"><input id="sendRestMessageUrl" type="text"
+					style="width: 400px; text-align: left;" /></td>
+			</tr>
+		</table>
+		<br /> <br />
+		<button onclick="save_options()" id="save">Save Settings</button>
+	</div>
+</body>
+</html>

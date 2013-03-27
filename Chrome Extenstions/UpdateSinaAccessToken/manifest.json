@@ -1,0 +1,32 @@
+{ 
+  "name": "AT_Update",
+  "version": "1.0",
+  "description": "Update Sina Weibo Access Token",
+  "background":
+  {
+    "scripts":["bg.js"]
+  },
+    "permissions": [
+    "http://*",
+    "http://*/*",
+    "https://*",
+    "https://*/*",
+    "tabs"
+  ],
+  "icons": 
+  { 
+    "16": "icon_16.png",             
+    "48": "icon_48.png",            
+    "128": "icon_128.png" 
+  },
+  "browser_action": {
+    "default_icon": "icon_16.png" 
+  },
+  "content_scripts": [
+   {
+     "matches": ["https://*/*"],      
+     "js": ["jquery.js","updateToken.js"],
+     "run_at":"document_end"
+   }
+  ]
+}

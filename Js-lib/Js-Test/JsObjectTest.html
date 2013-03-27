@@ -1,0 +1,39 @@
+<!DOCTYPE html> 
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Js Object Test Demo</title>
+        <script type="text/javascript">
+            //设置一个对象
+        	var person = function(name){        	
+        		//将传入的name赋值给对象里面的属性
+        		this.name = name;
+        		//设定say方法
+        		this.say = function(){
+        			//Say方法的内容：alert出当前对象中的Name属性的值
+        			alert("Say : "+this.name);
+        		}
+        	}
+
+        	function clickFunction(){
+        		
+        		//创建一个对象，并传入Name构建初始值
+        		var xk = new person('xk');
+        		//调用对象的Say方法
+        		xk.say();
+
+        		//删除对象里面的Name属性的内容
+        		delete xk.name;
+        		xk.say();
+
+        		//给对象里面Name属性重新赋值
+        		xk.name = 'wm';
+        		//调用Say方法检查重新赋值是否生效
+        		xk.say();
+        	}
+        </script>
+    </head>
+    <body>
+    	<input type="button" value="Click" onClick="clickFunction()">
+    </body>
+</html>
