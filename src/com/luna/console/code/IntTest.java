@@ -4,7 +4,9 @@ public class IntTest {
 
     public static void main(String[] args) {
 
-        System.out.println(1 % 2);
+    	int identity = System.identityHashCode("admin");
+    	System.out.println(identity);
+        //System.out.println(1 % 2);
 
         // int a = 1;
         // Long b = 1L;
