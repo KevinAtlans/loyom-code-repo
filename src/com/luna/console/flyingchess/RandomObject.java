@@ -1,4 +1,4 @@
-﻿package com.luna.console.flyingchess;
+package com.luna.console.flyingchess;
 
 public class RandomObject { // 本类用于随机生成游戏格特殊对象的索引号
 

@@ -1,4 +1,4 @@
-﻿package com.luna.console.flyingchess;
+package com.luna.console.flyingchess;
 
 import java.util.Scanner;
 
