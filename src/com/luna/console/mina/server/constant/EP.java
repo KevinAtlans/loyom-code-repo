@@ -51,6 +51,11 @@ public class EP {
 	 */
 	public static final int SHOES = 9;
 
+	/**
+	 * 通过装备的位置值得到装备的中文位置
+	 * @param ep 位置值
+	 * @return 对应的中文位置
+	 */
 	public static String getEquip(int ep) {
 		String str = "";
 		switch (ep) {

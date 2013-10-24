@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.luna.console.mina.server.bean.Obj;
 import com.luna.console.mina.server.bean.props.Equip;
+import com.luna.console.mina.server.constant.PP;
 
 /**
  * <p>
@@ -21,13 +22,14 @@ public class Player extends Obj {
 	private List<Equip> items = newArrayList();
 
 	private int level = 0; // 等级
+	private int career = PP.WIZARD; // 职业
 	private int speed = 0; // 当前任人物速度,每小时多少米,如果骑上坐骑应使用坐骑的速度
 
 	// 以下为机率属性,值不能大于100
 	private int luckValue = 0; // 幸运值
 	private int duck = 0; // 闪避值
 	private int block = 0; // 格挡值
-	private int hit = 0; // 命中
+	private int hit = 100; // 命中
 
 	// 以下为人物基础属性,由等级的提升逐步增长
 	private int baseHP = 0; // 基础血量
@@ -77,6 +79,14 @@ public class Player extends Obj {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public int getCareer() {
+		return career;
+	}
+
+	public void setCareer(int career) {
+		this.career = career;
 	}
 
 	public int getSpeed() {

@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import com.google.gson.Gson;
 
+/**
+ * 所以类的父类必须继承
+ * @author kai
+ *
+ */
 public class Obj implements Serializable {
 
 	private static final long serialVersionUID = 6304872236132715778L;
