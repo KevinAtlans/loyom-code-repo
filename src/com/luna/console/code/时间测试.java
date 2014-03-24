@@ -4,11 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.loyom.utils.Print;
+
 public class 时间测试 {
 
     public static void main(String[] args) {
 
-        test6();
+    	Print.print(System.currentTimeMillis());
+    	
+        // test6();
 
         // test5();
         // test4();

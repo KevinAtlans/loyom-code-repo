@@ -1,0 +1,232 @@
+package com.luna.console.webserver.proto;
+
+option java_package = "com.luna.console.webserver.protoClass";
+option java_outer_classname = "glorywarslotprotocol";
+
+message IntArray
+{
+    repeated uint32 value_array = 1 [packed=true];
+}
+
+message InitializeRequest
+{
+}
+
+message InitializeResponse
+{
+    repeated IntArray   line_array          = 1;                    // ���е���
+    repeated double     coin_value_array    = 2 [packed=true];      // �����������
+    optional uint32     coin_value_id       = 3;                    // Ĭ�ϳ������, ��0��ʼ    
+    repeated uint32     coin_amount_array   = 4 [packed=true];      // ������������
+    optional uint32     coin_amount_id      = 5;                    // Ĭ�ϳ�������, ��0��ʼ
+    required Status     status              = 6;                    // Ͷʯ������ǽ״̬
+    optional uint32     line_count          = 7;                    // ��Ϸ�ָ�,��ע����
+    optional Result     result              = 8;                    // ��Ϸ�ָ�
+}
+
+message Console
+{
+    optional uint32 line_count     = 1;    // ��ע���ߵ�����
+    optional uint32 coin_value_id  = 2;    // �������, ��0��ʼ
+    optional uint32 coin_amount_id = 3;    // ��������, ��0��ʼ
+}
+
+message PlayRequest
+{
+    // 0-spin, 1-wildspin, 2-scatterspin, 3-scatterclick, 4-flystonespin, 5-freespin, 6-bonusspin
+    optional uint32  action         = 1;        
+    optional Console console        = 2;        // ����̨,��ע��Ϣ,actionΪbonusʱΪ��
+    optional uint32  bonusGameType  = 3;        // ��bonus��ʹ�ã�0-������Ϸ1�� 1-������Ϸ2�� ����Ǹ�����Ϸ1����target��Ϊ�գ�����Ǹ�����Ϸ2����targetΪ��
+    optional uint32  target         = 4;        // actionΪbonus ������Ϸ1��ʹ�ã�����Ŀ��; ScatterClickʱ��Ϊ�����Scatterͼ�ꣻ�������͵�action,Ϊ��
+}
+
+message PlayResponse
+{
+    optional Result result     = 1;
+    required Status status     = 2;        // Ͷʯ������ǽ״̬
+}
+
+//0~14��?ͬ��ͼ�꣬0-SYMBOL_TEN, 1-SYMBOL_A, SYMBOL_J, SYMBOL_Q, SYMBOL_K, SYMBOL_WILD, SYMBOL_SCATTER, SYMBOL_DRAGON, SYMBOL_BOMB,
+//SYMBOL_BUNKER,SYMBOL_FLAG_A,SYMBOL_FLAG_B,SYMBOL_MAP,SYMBOL_MEDAL, 14-SYMBOL_TREASURE_CHEST,
+message Result
+{
+    required uint32             action              = 1;        // 0-spin, 1-wildspin, 2-scatterspin, 3-scatterclick ,4-flystonespin, 5-freespin, 6-bonusspin
+    required IntArray           symbols             = 2;        // 15��ͼ�꣬10��J, Q, K, A, ����ͼ�ꡢSCATTERͼ�ꡢWILDͼ��
+    optional WinContent         win_content         = 3;        // �н���Ϣ
+    required TotalWin           total_win           = 4;        // �н����
+    optional Freespin           free_spin           = 5;        // ���ǿգ���actionΪ spin ʱ����ʾ���Կ�ʼ freespin����actionΪ freespin ʱ��� times �ж��Ƿ���Լ��� freespin��
+    optional BonusSpin          bonus_spin          = 6;        // ������Ϸ,���ǿգ���actionΪ spin ʱ�����Խ���һ��bonusspin����action Ϊbonusspinʱ�������н���Ϣ 
+    optional ScatterSpin        scatter_spin        = 7;        // ��scatterʱ�ǿգ���actionΪspinʱ����ʾ���Կ�ʼScatterSpin;��actionΪScatterSpinʱ�����״̬�ж��Ƿ����ScatterSpin
+    optional ScatterClick       scatter_click       = 8;
+}
+
+message WinContent
+{
+    repeated WinLine            win_line_array              = 1;
+    optional WinWild            win_wild                    = 2;
+    optional WinScatter         win_scatter                 = 3;
+    optional WinFlyStone        win_fly_stone               = 4;
+    optional WinTimes           win_times                   = 5;                                // ��scatter spin��wildͼ��ʱʹ��
+    optional WinScatterSpinFixedReward      win_scatterSpinFixedReward          = 6;            // ��scatter spin��scatterͼ��ʱʹ��
+    optional WinCompensationReward          win_compensationReward              = 7;            // freespin����ʱ�Ĳ�������
+    optional WinFreespinExtraReward         win_freespinExtraReward             = 8;            // freespin����ʱ��׷�ӽ���
+    optional WinBounsRandomAmmoReward       win_BounsRandomAmmoReward           = 9;            // Bonus�е����ҩ����
+    optional WinBonusRandomPointReward      win_bonusRandomPointReward          = 10;           // Bonus�е���������
+    optional WinBonusLeftAmmunitionReward   win_bonusLeftAmmunitionReward       = 11;           // Bonus�е�ʣ�൯ҩ���ܽ���
+    optional WinBonusTreasure               win_BonusTreasure                   = 12;
+    
+}
+
+message TotalWin
+{
+    required double total_win   = 1;    //�ܹ�Ӯ�˶���
+}
+
+message WallAndStoneCarStatus
+{
+    // action:
+    // 0-�޸ı䣬1-Ͷʯ������2-��ǽ�޸���3-Ͷʯ������4-��ǽ̮��5-��ǽ�ؽ���
+    required uint32 action                  = 1;
+    required uint32 wall_status             = 2;
+    required uint32 stonecar_status         = 3;
+    required uint32 wall_increase           = 4;        // ��ǽÿ���޸�ֵ
+    required uint32 wall_min_status         = 5;        // ��ǽ���ֵ
+    required uint32 wall_max_status         = 6;        // ��ǽ��Ѫֵ
+    required uint32 stonecar_increase       = 7;        // Ͷʯ��ÿ������ֵ
+    required uint32 stonecar_min_status     = 8;        // Ͷʯ����С����ֵ
+    required uint32 stonecar_max_status     = 9;        // Ͷʯ����Ѫֵ
+    required uint32 stone_attack_value      = 10;       // Ͷʯ�����˺�ֵ
+}
+
+message Status
+{
+  required WallAndStoneCarStatus pc_WallAndStoneCarStatus       = 1;
+  required WallAndStoneCarStatus player_WallAndStoneCarStatus   = 2;
+}
+
+message WinLine
+{
+    optional uint32   line_id    = 1;      
+    optional uint32   win_symbol = 2;     // 
+    optional double   pay        = 3;
+    optional IntArray positions  = 4;     // �н���ͼ��λ��
+}
+
+message WinWild
+{
+    optional IntArray positions = 1;     // ��˸��λ��
+}
+
+message WinScatter
+{
+    optional double   multiplier    = 1;     // ������
+    optional IntArray positions     = 2;     // ��˸��λ��
+}
+
+message ScatterSpin
+{
+    // ��scatter��Ϸ�����Ķ�����Ϸ�м�����scatter��ʱ������Ϸ���ܴ�������
+    required uint32 times = 1;
+    required double totalWin = 2;
+}
+
+message WinTimes
+{
+    optional IntArray positions = 1;     // ��˸��λ��
+}
+
+message WinScatterSpinFixedReward
+{
+    required double pay = 1;            // ÿ�ε���Ķ��⽱��
+}
+
+message ScatterClickSymbol
+{
+    required uint32 position = 1;
+    required double reward = 2;
+}
+
+message ScatterClick
+{
+    required uint32 times = 1;                              // ��¼��scatterspin���ٴ���scatter��ʱ��ʣ�໹���Ե����scatterͼ������
+    repeated uint32 position = 2;                           // ��¼ʣ����Ե����scatterͼ��λ��
+    repeated ScatterClickSymbol scatterClickSymbol = 3;     // �ѵ����scatterͼ���λ�úͽ���
+    required double totalWin = 4;                           // ScatterClick���ܹ�Ӯ��
+    required double containSpinTotalPay = 5;                // ScatterClick�е����⸶�����scatter click���spin���⸶
+}
+
+message WinFlyStone
+{
+    required uint32 position    = 1;    // �н���λ��
+    required bool   direction   = 2;    // ��ʯ�ķ���0Ϊ��ߣ�1Ϊ�ұ�
+}
+
+message Freespin
+{
+    required uint32 times               = 1;
+    required double pay                 = 2;    // �н����
+    required double freespin_totalWin   = 3;    // Freespin�е����н���
+}
+
+message BonusSpin
+{
+    required uint32 times                           = 1;
+    required uint32 gameType                        = 2;    // �ж���Ϸ���
+    optional CityStateBonusSpin cityStateBonusSpin  = 3;    // ��ǽ������Ϸ
+    optional TreasureBonusSpin treasureBonusSpin    = 4;    // Ѱ��
+}
+
+message CityStateBonusTargetInfo
+{
+    required uint32 position = 1;                             //������Ϸһ�б��ݻٵķ���λ��
+    required uint32 rewardType = 2;                           //��������, 0-���� 1-��ҩ
+    required double reward = 3;                               //����ֵ
+}
+
+message CityStateBonusSpin
+{
+    required IntArray destroyed_target_list = 1;    // �����ٵķ���
+    required IntArray intact_target_list    = 2;    // ����ķ���
+    required double totalWinPoints          = 3;
+    required double totalWinAmmo            = 4;
+    repeated uint32 pointsReward            = 5;    // bonus spin����ʱ���������еķ�����
+    repeated uint32 ammoReward              = 6;    // bonus spin����ʱ���������е��ڵ�����
+    optional double ammoWorthPoints         = 7;    // bonus spin������ʣ���ڵ�ʱ��һ���ڵ���Ӧ�ķ���
+    repeated CityStateBonusTargetInfo destroyedTargets = 8;  // �ѻ��ٷ��ӵ���Ϣ
+}
+
+message  TreasureBonusSpin
+{
+    repeated uint32 step    = 1 [packed=true];          // ����洢�������еĵ�ǰ���� 0-��A(��)��1-��B(��)��2-��C(��)
+    required uint32 symbol  = 2;                        // �н�ͼ��
+}
+
+message WinBonusTreasure
+{
+    required double reward = 1;     // ������Ϸ���еı���
+}
+
+message WinCompensationReward       // ��������
+{
+    required double reward = 1;
+}
+
+message WinFreespinExtraReward
+{
+    required double reward = 1;
+}
+
+message WinBounsRandomAmmoReward
+{
+    required uint32 reward = 1;
+}
+
+message WinBonusRandomPointReward
+{
+    required double reward = 1;
+}
+
+message WinBonusLeftAmmunitionReward
+{
+    required double reward = 1;
+}

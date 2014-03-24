@@ -6,14 +6,14 @@ import org.mortbay.jetty.servlet.ServletHolder;
 
 public class MyWebServer {
 
-    public static final int DEFAULT_PORT_NUMBER = 9527;
+    public static final int DEFAULT_PORT_NUMBER = 22838;
 
     private Server server;
 
     public void startServer() throws Exception {
 
         server = new Server(MyWebServer.DEFAULT_PORT_NUMBER);
-        Context root = new Context(server, "/SimpleRestService", Context.SESSIONS);
+        Context root = new Context(server, "/gamecore_web", Context.SESSIONS);
         root.addServlet(new ServletHolder(new WebServlet()), "/*");
         server.start();
     }

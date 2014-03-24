@@ -19,7 +19,7 @@ public class ServerDemo {
         boolean isEnd = false;
         ServerSocket ss = null;
         try {
-            ss = new ServerSocket(8888);
+            ss = new ServerSocket(7321);
             Socket socket = null;
             do {
                 // 服务器接收到客户端的数据后，创建与此客户端对话的Socket

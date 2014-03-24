@@ -65,6 +65,5 @@ public class ConnectHandler extends IoHandlerAdapter {
 	@Override
 	public void messageSent(IoSession session, Object message) {
 		Print.println("messageSent:%s", session.getId());
-		Print.println(message);
 	}
 }

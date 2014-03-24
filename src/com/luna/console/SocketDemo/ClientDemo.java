@@ -19,7 +19,7 @@ public class ClientDemo {
         try {
             Scanner input = new Scanner(System.in);
             do {
-                socket = new Socket("localhost", 8080);
+                socket = new Socket("localhost", 7321);
                 // 获取输出流，用于客户端向服务器端发送数据
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                 // 获取输入流，用于接收服务器端发送来的数据

@@ -1,0 +1,20 @@
+package com.luna.console.webserver.proto;
+
+option java_package = "com.luna.console.webserver.protoClass";
+option java_outer_classname = "GameProtocol";
+
+message Request
+{
+    optional uint32 session = 1;
+    optional uint32 action  = 2;     // 0-initializeGame, 1-playGame
+    optional string game    = 3;
+    optional bytes  data    = 4;    
+}
+
+message Response
+{   
+    optional double balance = 1;
+    optional uint32 action  = 2;
+    optional string game    = 3;
+    optional bytes  data    = 4;    
+}
